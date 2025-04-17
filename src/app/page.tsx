@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Iconfy from '../../public/icon.svg';
 import MainImg from '../../public/android_better_iphone.svg';
@@ -29,6 +29,9 @@ const hoverEffect = {
   },
 };
 
+// API URL 상수
+const API_BASE_URL = 'https://ala-api.injun.dev';
+
 export default function Home() {
   const mainSectionRef = useRef(null);
   const scrollIndicatorRef = useRef(null);
@@ -36,11 +39,84 @@ export default function Home() {
   const featureSection2Ref = useRef(null);
   const ctaButtonRef = useRef(null);
   
+  // 방문자 수와 다운로드 수를 저장할 상태
+  const [trafficStats, setTrafficStats] = useState({ visitCount: 0, downloadCount: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  
   const isMainSectionInView = useInView(mainSectionRef, { once: false, amount: 0.3 });
   const isScrollIndicatorInView = useInView(scrollIndicatorRef, { once: false });
   const isFeatureSection1InView = useInView(featureSection1Ref, { once: false, amount: 0.2 });
   const isFeatureSection2InView = useInView(featureSection2Ref, { once: false, amount: 0.2 });
   const isCtaButtonInView = useInView(ctaButtonRef, { once: false });
+
+  // 페이지 로드 시 방문 수 증가 API 호출
+  useEffect(() => {
+    const registerVisit = async () => {
+      try {
+        // 방문 수 증가 API 호출
+        await fetch(`${API_BASE_URL}/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        // 방문 및 다운로드 수 조회 API 호출
+        fetchTrafficStats();
+      } catch (error) {
+        console.error('방문 등록 중 오류 발생:', error);
+      }
+    };
+    
+    registerVisit();
+  }, []);
+  
+  // 트래픽 통계 가져오기
+  const fetchTrafficStats = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_BASE_URL}/check`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('통계 가져오기 실패');
+      }
+      
+      const data = await response.json();
+      if (data && data.length > 0) {
+        setTrafficStats(data[0]);
+      }
+    } catch (error) {
+      console.error('트래픽 통계 가져오기 실패:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // 다운로드 버튼 클릭 핸들러
+  const handleDownloadClick = async () => {
+    try {
+      // 다운로드 수 증가 API 호출
+      await fetch(`${API_BASE_URL}/download`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      // 최신 통계 다시 가져오기
+      fetchTrafficStats();
+      
+      // 실제 앱 다운로드 로직이 필요하다면 여기에 추가
+      alert('다운로드가 시작됩니다. 감사합니다!');
+    } catch (error) {
+      console.error('다운로드 등록 중 오류 발생:', error);
+    }
+  };
 
   return (
     <main className="flex flex-col items-center w-full min-h-screen overflow-x-hidden font-sans text-black bg-white select-none">
@@ -53,6 +129,18 @@ export default function Home() {
         <motion.div className='flex items-center p-0 m-0' variants={fadeInUp} {...hoverEffect}>
           <Image src={Iconfy} alt="로고" width={35} />
           <span className='flex mt-1 ml-1'>ALA</span>
+        </motion.div>
+        
+        {/* 방문자 & 다운로드 카운터 표시 */}
+        <motion.div className="flex gap-4 text-xs" variants={fadeInUp}>
+          <div className="flex flex-col items-center">
+            <span className="font-bold">방문자</span>
+            <span>{isLoading ? '로딩 중...' : trafficStats.visitCount}</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="font-bold">다운로드</span>
+            <span>{isLoading ? '로딩 중...' : trafficStats.downloadCount}</span>
+          </div>
         </motion.div>
       </motion.div>
 
@@ -222,7 +310,10 @@ export default function Home() {
         transition={{ duration: 0.4 }}
         whileHover={{ scale: 1.1 }}
       >
-        <button className="flex items-start py-10 text-xl font-medium border-2 border-black cursor-pointer px-80 rounded-2xl ">
+        <button 
+          className="flex items-start py-10 text-xl font-medium border-2 border-black cursor-pointer px-80 rounded-2xl"
+          onClick={handleDownloadClick}
+        >
           DownLoad ALA From Now ON
         </button>
       </motion.div>
