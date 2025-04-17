@@ -121,7 +121,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center w-full min-h-screen overflow-x-hidden font-sans text-black bg-white select-none">
       <motion.div 
-        className="flex justify-between w-full px-6 py-4 text-sm font-semibold"
+        className="flex justify-between w-full px-4 py-4 text-sm font-semibold sm:px-6"
         initial="initial"
         animate="animate"
         variants={staggerContainer}
@@ -132,7 +132,7 @@ export default function Home() {
         </motion.div>
         
         {/* 방문자 & 다운로드 카운터 표시 */}
-        <motion.div className="flex gap-4 text-xs" variants={fadeInUp}>
+        <motion.div className="flex gap-2 text-xs sm:gap-4" variants={fadeInUp}>
           <div className="flex flex-col items-center">
             <span className="font-bold">방문자</span>
             <span>{isLoading ? '로딩 중...' : trafficStats.visitCount}</span>
@@ -146,38 +146,38 @@ export default function Home() {
 
       <motion.section 
         ref={mainSectionRef}
-        className="flex flex-col items-start w-full px-4 py-20"
+        className="flex flex-col items-start w-full px-4 py-10 sm:py-20"
         initial="initial"
         animate={isMainSectionInView ? "animate" : "initial"}
         variants={staggerContainer}
       >
-        <motion.div className='flex flex-col items-center justify-center ml-20 cursor-pointer' variants={fadeInUp} {...hoverEffect}>
-          <motion.div className='flex flex-col' variants={fadeInUp} {...hoverEffect}>
-            <h1 className="text-5xl font-bold md:text-1xl">
+        <motion.div className='flex flex-col items-center justify-center mx-auto text-center cursor-pointer md:ml-20 md:text-left' variants={fadeInUp} {...hoverEffect}>
+          <motion.div className='flex flex-col max-w-3xl' variants={fadeInUp} {...hoverEffect}>
+            <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">
               아이폰 유저는 알람소리를 커스텀 할 수 없다?
             </h1>
-            <p className="mt-5 text-2xl text-gray-500">
+            <p className="mt-4 text-lg text-gray-500 sm:mt-5 sm:text-xl md:text-2xl">
               갤럭시는 마음대로 알람 커스텀 가능한데...?<br />
               이참에 갤럭시로 갈아탈까???
             </p>
           </motion.div>
         </motion.div>
         <motion.div 
-          className="relative flex items-end justify-end w-full h-auto mt-10 animate-bounce"
+          className="relative flex items-end justify-center w-full h-auto mt-8 md:justify-end sm:mt-10 animate-bounce"
           variants={fadeInUp}
           {...hoverEffect}
         >
           <Image
             src={MainImg}
             alt="메인 이미지"
-            className='w-[500px] flex items-end mr-[60px]'
+            className='w-[300px] sm:w-[200px] md:w-[300px] mx-auto md:mr-[60px] mt-10'
           />
         </motion.div>
       </motion.section>
 
       <motion.div 
         ref={scrollIndicatorRef}
-        className="py-4 relative top-[-80px]"
+        className="py-4 relative top-[-40px] sm:top-[-80px]"
         initial={{ opacity: 0 }}
         animate={isScrollIndicatorInView ? { opacity: 1, y: [0, -10, 0] } : { opacity: 0 }}
         transition={{ 
@@ -190,49 +190,49 @@ export default function Home() {
 
       <motion.section 
         ref={featureSection1Ref}
-        className="w-full max-w-5xl px-4 py-16 text-center"
+        className="w-full max-w-5xl px-4 py-10 text-center sm:py-16"
         initial="initial"
         animate={isFeatureSection1InView ? "animate" : "initial"}
         variants={staggerContainer}
       >
-        <motion.h2 className="mb-20 text-3xl font-semibold cursor-pointer" variants={fadeInUp} {...hoverEffect}>
+        <motion.h2 className="mb-10 text-2xl font-semibold cursor-pointer sm:mb-20 sm:text-3xl" variants={fadeInUp} {...hoverEffect}>
           아이폰 효과음을 커스텀 할 수는 없을까?? 😥
         </motion.h2>
-        <div className="grid grid-cols-1 gap-8 cursor-pointer md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 cursor-pointer sm:grid-cols-2 md:grid-cols-3 sm:gap-8">
           <motion.div 
-            className="p-10 text-white bg-black rounded-xl" 
+            className="p-4 text-white bg-black sm:p-6 md:p-10 rounded-xl" 
             variants={fadeInUp}
             custom={0}
             {...hoverEffect}
           >
-            <div className="mb-2 text-4xl">👻</div>
-            <p className="mb-10">한결같은 벨소리</p>
+            <div className="mb-2 text-3xl sm:text-4xl">👻</div>
+            <p className="mb-4 sm:mb-10">한결같은 벨소리</p>
             <audio controls className="w-full">
               <source src="/sounds/iphonebell.mp3" type="audio/mp3" />
             </audio>
           </motion.div>
           
           <motion.div 
-            className="p-10 text-white bg-black rounded-xl" 
+            className="p-4 text-white bg-black sm:p-6 md:p-10 rounded-xl" 
             variants={fadeInUp}
             custom={1}
             {...hoverEffect}
           >
-            <div className="mb-2 text-4xl">👻</div>
-            <p className="mb-10">지루한 알림음</p>
+            <div className="mb-2 text-3xl sm:text-4xl">👻</div>
+            <p className="mb-4 sm:mb-10">지루한 알림음</p>
             <audio controls className="w-full">
               <source src="/sounds/iphonenoti.mp3" type="audio/mp3" />
             </audio>
           </motion.div>
           
           <motion.div 
-            className="p-10 text-white bg-black rounded-xl" 
+            className="p-4 text-white bg-black sm:p-6 md:p-10 rounded-xl sm:col-span-2 md:col-span-1" 
             variants={fadeInUp}
             custom={2}
             {...hoverEffect}
           >
-            <div className="mb-2 text-4xl">👻</div>
-            <p className="mb-10">아이폰만의 구시대적인 단점</p>
+            <div className="mb-2 text-3xl sm:text-4xl">👻</div>
+            <p className="mb-4 sm:mb-10">아이폰만의 구시대적인 단점</p>
             <audio controls className="w-full">
               <source src="/sounds/failed.mp3" type="audio/mp3" />
             </audio>
@@ -240,7 +240,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <div className='mt-40 mb-40'>
+      <div className='mt-20 mb-20 sm:mt-40 sm:mb-40'>
         <span className='text-4xl'>.</span><br />
         <span className='text-4xl'>.</span><br />
         <span className='text-4xl'>.</span><br />
@@ -248,49 +248,49 @@ export default function Home() {
 
       <motion.section 
         ref={featureSection2Ref}
-        className="w-full max-w-5xl px-4 py-16 text-center"
+        className="w-full max-w-5xl px-4 py-10 text-center sm:py-16"
         initial="initial"
         animate={isFeatureSection2InView ? "animate" : "initial"}
         variants={staggerContainer}
       >
-        <motion.h2 className="mb-20 text-3xl font-semibold cursor-pointer" variants={fadeInUp} {...hoverEffect}>
+        <motion.h2 className="mb-10 text-2xl font-semibold cursor-pointer sm:mb-20 sm:text-3xl" variants={fadeInUp} {...hoverEffect}>
           ALA가 있다면 !? 🤔
         </motion.h2>
-        <div className="grid grid-cols-1 gap-8 cursor-pointer mb-100 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 mb-20 cursor-pointer sm:grid-cols-2 md:grid-cols-3 sm:gap-8 sm:mb-40">
           <motion.div 
-            className="p-10 text-white bg-black rounded-xl" 
+            className="p-4 text-white bg-black sm:p-6 md:p-10 rounded-xl" 
             variants={fadeInUp}
             custom={0}
             {...hoverEffect}
           >
-            <div className="mb-2 text-3xl">✅</div>
-            <p className="mb-10">늘 짜릿한 벨소리</p>
+            <div className="mb-2 text-2xl sm:text-3xl">✅</div>
+            <p className="mb-4 sm:mb-10">늘 짜릿한 벨소리</p>
             <audio controls className="w-full">
               <source src="/sounds/gongsup.mp3" type="audio/mp3" />
             </audio>
           </motion.div>
           
           <motion.div 
-            className="p-10 text-white bg-black rounded-xl" 
+            className="p-4 text-white bg-black sm:p-6 md:p-10 rounded-xl" 
             variants={fadeInUp}
             custom={1}
             {...hoverEffect}
           >
-            <div className="mb-2 text-3xl">✅</div>
-            <p className="mb-10">아이유의 모닝콜</p>
+            <div className="mb-2 text-2xl sm:text-3xl">✅</div>
+            <p className="mb-4 sm:mb-10">아이유의 모닝콜</p>
             <audio controls className="w-full">
               <source src="/sounds/iubell.mp3" type="audio/mp3" />
             </audio>
           </motion.div>
           
           <motion.div 
-            className="p-10 text-white bg-black rounded-xl" 
+            className="p-4 text-white bg-black sm:p-6 md:p-10 rounded-xl sm:col-span-2 md:col-span-1" 
             variants={fadeInUp}
             custom={2}
             {...hoverEffect}
           >
-            <div className="mb-2 text-3xl">✅</div>
-            <p className="mb-10">아이폰을 재정의해주는 신규 기능</p>
+            <div className="mb-2 text-2xl sm:text-3xl">✅</div>
+            <p className="mb-4 sm:mb-10">아이폰을 재정의해주는 신규 기능</p>
             <audio controls className="w-full">
               <source src="/sounds/sucess.mp3" type="audio/mp3" />
             </audio>
@@ -298,20 +298,20 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.h2 className="text-5xl font-semibold cursor-pointer mb-100">
+      <motion.h2 className="px-4 mb-10 text-3xl font-semibold text-center cursor-pointer sm:text-4xl md:text-5xl sm:mb-20">
           아이폰 효과음을 커스텀 하다.
       </motion.h2>
 
       <motion.div 
         ref={ctaButtonRef}
-        className="flex justify-center w-full py-10 mb-50"
+        className="flex justify-center w-full px-4 py-6 mb-20 sm:py-10 sm:mb-40"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={isCtaButtonInView ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
         transition={{ duration: 0.4 }}
         whileHover={{ scale: 1.1 }}
       >
         <button 
-          className="flex items-start py-10 text-xl font-medium border-2 border-black cursor-pointer px-80 rounded-2xl"
+          className="flex items-start justify-center w-full px-6 py-4 text-base font-medium text-center border-2 border-black cursor-pointer sm:py-6 md:py-10 sm:text-lg md:text-xl sm:px-20 md:px-40 lg:px-80 rounded-2xl sm:w-auto"
           onClick={handleDownloadClick}
         >
           DownLoad ALA From Now ON
