@@ -31,6 +31,8 @@ const hoverEffect = {
 
 // API URL 상수
 const API_BASE_URL = 'https://ala-api.injun.dev';
+// 방문 카운트 제한 시간 (24시간 = 86400000 밀리초)
+const VISIT_COOLDOWN = 86400000; 
 
 export default function Home() {
   const mainSectionRef = useRef(null);
@@ -42,6 +44,7 @@ export default function Home() {
   // 방문자 수와 다운로드 수를 저장할 상태
   const [trafficStats, setTrafficStats] = useState({ visitCount: 0, downloadCount: 0 });
   const [isLoading, setIsLoading] = useState(true);
+  const [showVisitWarning, setShowVisitWarning] = useState(false);
   
   const isMainSectionInView = useInView(mainSectionRef, { once: false, amount: 0.3 });
   const isScrollIndicatorInView = useInView(scrollIndicatorRef, { once: false });
@@ -53,6 +56,24 @@ export default function Home() {
   useEffect(() => {
     const registerVisit = async () => {
       try {
+        // 로컬 스토리지에서 마지막 방문 시간 확인
+        const lastVisit = localStorage.getItem('lastVisit');
+        const currentTime = Date.now();
+        
+        if (lastVisit && (currentTime - parseInt(lastVisit) < VISIT_COOLDOWN)) {
+          // 24시간 내 이미 방문한 경우
+          setShowVisitWarning(true);
+          // 3초 후 경고창 숨기기
+          setTimeout(() => setShowVisitWarning(false), 3000);
+          
+          // 방문 수는 증가시키지 않고 기존 통계만 가져오기
+          fetchTrafficStats();
+          return;
+        }
+        
+        // 새로운 방문으로 처리
+        localStorage.setItem('lastVisit', currentTime.toString());
+        
         // 방문 수 증가 API 호출
         await fetch(`${API_BASE_URL}/`, {
           method: 'GET',
@@ -68,7 +89,10 @@ export default function Home() {
       }
     };
     
-    registerVisit();
+    // 클라이언트 사이드에서만 실행
+    if (typeof window !== 'undefined') {
+      registerVisit();
+    }
   }, []);
   
   // 트래픽 통계 가져오기
@@ -120,6 +144,23 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center w-full min-h-screen overflow-x-hidden font-sans text-black bg-white select-none">
+      {/* 중복 방문에 대한 경고창 */}
+      {showVisitWarning && (
+        <div className="fixed z-50 max-w-md p-4 text-yellow-700 transition-opacity duration-300 transform -translate-x-1/2 bg-yellow-100 border-l-4 border-yellow-500 rounded shadow-md top-4 left-1/2">
+          <div className="flex">
+            <div className="py-1">
+              <svg className="w-6 h-6 mr-4 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold">알림</p>
+              <p className="text-sm">24시간 이내에 이미 방문하셨습니다. 방문 수가 중복으로 카운트되지 않습니다.</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <motion.div 
         className="flex justify-between w-full px-4 py-4 text-sm font-semibold sm:px-6"
         initial="initial"
@@ -170,7 +211,7 @@ export default function Home() {
           <Image
             src={MainImg}
             alt="메인 이미지"
-            className='w-[300px] sm:w-[200px] md:w-[300px] mx-auto md:mr-[60px] mt-10'
+            className='w-[300px] sm:w-[400px] md:w-[500px] mx-auto md:mr-[60px]'
           />
         </motion.div>
       </motion.section>
