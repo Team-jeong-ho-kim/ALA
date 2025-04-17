@@ -120,7 +120,7 @@ export default function Home() {
             <div className="mb-2 text-4xl">👻</div>
             <p className="mb-10">한결같은 벨소리</p>
             <audio controls className="w-full">
-              <source src="/sounds/iphonebell" type="audio/mp3" />
+              <source src="/sounds/iphonebell.mp3" type="audio/mp3" />
             </audio>
           </motion.div>
           
@@ -133,7 +133,7 @@ export default function Home() {
             <div className="mb-2 text-4xl">👻</div>
             <p className="mb-10">지루한 알림음</p>
             <audio controls className="w-full">
-              <source src="/sounds/iphonenoti" type="audio/mp3" />
+              <source src="/sounds/iphonenoti.mp3" type="audio/mp3" />
             </audio>
           </motion.div>
           
